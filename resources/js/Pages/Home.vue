@@ -1,9 +1,9 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import Navbar from '@/Components/Navbar.vue'
-import CardNews from '@/Components/News/CardNews.vue'
+import CardBlog from '@/Components/Blog/CardBlog.vue'
 import Footer from '@/Components/Footer.vue'
-import CategoryNews from '@/Components/News/CategoryNews.vue';
+
 const props = defineProps({
     canLogin: {
         type: Boolean,
@@ -11,21 +11,17 @@ const props = defineProps({
     canRegister: {
         type: Boolean,
     },
-    latest_news: {
+    newArticle: {
         type: Object,
         default: () => ({})
     },
-    isHotNews: {
+    isHotArticle: {
         type: Object,
         default: () => ({})
     },
-    categories: {
-        type: Object,
-        default: () => ({})
-    }
 });
 
-// console.log(props.categories);
+console.log(props.newArticle);
 </script>
 
 <script>
@@ -40,9 +36,9 @@ export default {
             var firtsWord = content.replace(/ .*/, '');
             return firtsWord
         },
-        limitHotNewsText(isHotNews) {
-            let content = this.stripTags(isHotNews.content);
-            let countFirstHotNews = this.firstHotNewsWord(isHotNews).length;
+        limitHotNewsText(isHotArticle) {
+            let content = this.stripTags(isHotArticle.content);
+            let countFirstHotNews = this.firstHotNewsWord(isHotArticle).length;
             console.log(countFirstHotNews);
             return content.length > 300 ? content.substring(countFirstHotNews, 300) : content;
         },
@@ -55,45 +51,31 @@ export default {
 </script>
 
 <template>
-    <Head title="Newsportal" />
+    <Head title="Blogportal" />
 
     <Navbar :canLogin="canLogin" :canRegister="canRegister" />
-    <div class="px-32">
-        <h1 class="font-bold text-left py-4 text-5xl">Hot Topics</h1>
+    <div class="sm:px-32 px-5 ">
+        <h1 class="font-3xl font-bold text-left py-4 text-4xl">Hot Article</h1>
 
-        <div class="flex justify-between gap-8">
-            <img class="rounded-lg h-3/4" :width="870" :height="400" :src="showImage() + isHotNews.image_url"
+        <div class="xl:flex justify-between gap-8">
+            <img class="rounded-lg h-3/4" :width="870" :height="400" :src="showImage() + isHotArticle.image_url"
                 alt="hottopic">
             <div class="font-normal text-sm leading-8 h-1/4">
-                <!-- <span class="text-4xl">Nisi,</span> sagittis aliquet sit rutrum. Nunc, id vestibulum quam ornare adipiscing.
-                Pellentesque sed
-                turpis nunc
-                gravida pharetra, sit nec vivamus pharetra. Velit, dui, egestas nisi, elementum mattis mauris, magnis. Massa
-                tortor nibh nulla condimentum imperdiet scelerisque... read more -->
-                <span class="text-4xl">{{ firstHotNewsWord(isHotNews) }}</span> {{ limitHotNewsText(isHotNews) }}
-                <Link class="text-blue-600" :href="route('readnews', $page.props.isHotNews.slug)">read more...</Link>
+                <span class="text-4xl">{{ firstHotNewsWord(isHotArticle) }}</span> {{ limitHotNewsText(isHotArticle) }}
+                <Link class="text-blue-600" :href="route('readArticle', $page.props.isHotArticle.slug)">read more...</Link>
             </div>
         </div>
 
         <div class=" mt-14">
             <div class="font-bold text-4xl">
-                Latest News
+                Latest Article
             </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-7 content-center">
-            <CardNews :latest_news="props.latest_news" />
+        <div class="lg:grid grid-cols-4 gap-7 content-center">
+            <CardBlog :newArticle="props.newArticle" />
+            <CardBlog :newArticle="props.newArticle" />
         </div>
-
-        <div class="mt-14">
-            <div class="font-bold text-4xl">
-                Topic
-            </div>
-            <div class="flex justify-start gap-3 mt-8">
-                <CategoryNews :categories="props.categories" />
-            </div>
-        </div>
-
     </div>
     <Footer />
 </template>
