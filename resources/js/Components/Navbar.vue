@@ -15,7 +15,7 @@ export default {
 <template>
     <div class="mx-auto py-4">
         <nav>
-            <ul class="px-5 sm:px-32 flex justify-between items-center">
+            <ul class="px-5 sm:px-10 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <Link :href="route('home')" class="bg-black px-2 py-2 rounded text-white font-bold text-base">
                     Blog

@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import Navbar from '@/Components/Navbar.vue'
 import CardBlog from '@/Components/Blog/CardBlog.vue'
+import IsHotArticle from '@/Components/Blog/IsHotArticle.vue'
 import Footer from '@/Components/Footer.vue'
 
 const props = defineProps({
@@ -57,14 +58,7 @@ export default {
     <div class="sm:px-32 px-5 ">
         <h1 class="font-3xl font-bold text-left py-4 text-4xl">Hot Article</h1>
 
-        <div class="xl:flex justify-between gap-8">
-            <img class="rounded-lg h-3/4" :width="870" :height="400" :src="showImage() + isHotArticle.image_url"
-                alt="hottopic">
-            <div class="font-normal text-sm leading-8 h-1/4">
-                <span class="text-4xl">{{ firstHotNewsWord(isHotArticle) }}</span> {{ limitHotNewsText(isHotArticle) }}
-                <Link class="text-blue-600" :href="route('readArticle', $page.props.isHotArticle.slug)">read more...</Link>
-            </div>
-        </div>
+        <IsHotArticle :isHotArticle="props.isHotArticle" />
 
         <div class=" mt-14">
             <div class="font-bold text-4xl">
@@ -73,7 +67,6 @@ export default {
         </div>
 
         <div class="lg:grid grid-cols-4 gap-7 content-center">
-            <CardBlog :newArticle="props.newArticle" />
             <CardBlog :newArticle="props.newArticle" />
         </div>
     </div>

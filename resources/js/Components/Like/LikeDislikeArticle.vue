@@ -40,7 +40,7 @@ function dislikeArticle(articleId) {
 </script>
 
 <template>
-    <div class="mt-2">
+    <div class="my-1">
         <div v-if="props.hasBeenLikeArticle.status == 1">
             <ButtonDislike @click="cancelLike(readArticle.id, props.hasBeenLikeArticle.like_id)">
                 Cancel like
@@ -51,13 +51,13 @@ function dislikeArticle(articleId) {
                 Cancel Dislike
             </ButtonLike>
         </div>
-        <div class="flex justify-start gap-2" v-else>
-            <ButtonDislike @click="dislikeArticle(readArticle.id)">
-                Dislike
-            </ButtonDislike>
+        <div class="flex justify-start" v-else>
             <ButtonLike @click="likeArticle(readArticle.id)">
                 Like
             </ButtonLike>
+            <ButtonDislike @click="dislikeArticle(readArticle.id)">
+                Dislike
+            </ButtonDislike>
         </div>
     </div>
 </template>

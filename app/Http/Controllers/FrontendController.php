@@ -33,7 +33,20 @@ class FrontendController extends Controller
     {
         $blog_id = Blog::where('slug', $slug)->first()->id;
 
-        $comments = Comment::with('user', 'likes')->where('blog_id', $blog_id)->get();
+        // $comments = Comment::with('user', 'likes')->where('blog_id', $blog_id)->get();
+
+        $user_id = Auth::id();
+
+        $comments = Comment::with('likes')->when($user_id, function ($query) use ($user_id) {
+            return $query->orderByDesc('user_id', $user_id)
+                ->orderByDesc('created_at');
+        })
+            ->when(!$user_id, function ($query) {
+                return $query->orderByDesc('created_at');
+            })
+            ->get();
+
+        // dd($comments);
 
         $collectComments = $comments->collect();
 
@@ -42,10 +55,10 @@ class FrontendController extends Controller
             $status = [];
 
             foreach ($comments->likes as $key => $like) {
-                if ($like->is_like == 1 && $like->user_id == Auth::user()->id) {
+                if ($like->is_like == 1 && $like->user_id == Auth::id()) {
                     $status['status'] =  1;
                     $status['like_id'] = $like->id;
-                } elseif ($like->is_like == 2 && $like->user_id == Auth::user()->id) {
+                } elseif ($like->is_like == 2 && $like->user_id == Auth::id()) {
                     $status['status'] =  2;
                     $status['like_id'] = $like->id;
                 }
@@ -63,29 +76,30 @@ class FrontendController extends Controller
                 'user' => $comments->user
             ];
         });
+
         // dd($collectDataMapComments);
-        $checkHasBeenLike = Like::where('user_id', Auth::user()->id)->where('is_blog', 1)->where('is_like', 1)->orWhere('is_like', 2)->first();
-        // dd($checkHasBeenLike);
-        if ($checkHasBeenLike) {
-            if ($checkHasBeenLike->is_like == 1) {
-                // Condition 1: User has liked the article
-                $hasBeenLikeArticle = [
-                    'status' => $checkHasBeenLike->is_like,
-                    'like_id' => $checkHasBeenLike->id
-                ];
-            } else {
-                // Condition 2: User has disliked the article
-                $hasBeenLikeArticle = [
-                    'status' => $checkHasBeenLike->is_like,
-                    'like_id' => $checkHasBeenLike->id
-                ];
-            }
-        } else {
-            // Condition 3: User has neither liked nor disliked the article
-            $hasBeenLikeArticle = [
-                'status' => 3,
-            ];
-        }
+
+        // $checkHasBeenLike = Like::where('user_id', Auth::user()->id)->where('is_blog', 1)->where('is_like', 1)->orWhere('is_like', 2)->first();
+        // if ($checkHasBeenLike) {
+        //     if ($checkHasBeenLike->is_like == 1) {
+        //         // Condition 1: User has liked the article
+        //         $hasBeenLikeArticle = [
+        //             'status' => $checkHasBeenLike->is_like,
+        //             'like_id' => $checkHasBeenLike->id
+        //         ];
+        //     } else {
+        //         // Condition 2: User has disliked the article
+        //         $hasBeenLikeArticle = [
+        //             'status' => $checkHasBeenLike->is_like,
+        //             'like_id' => $checkHasBeenLike->id
+        //         ];
+        //     }
+        // } else {
+        //     // Condition 3: User has neither liked nor disliked the article
+        //     $hasBeenLikeArticle = [
+        //         'status' => 3,
+        //     ];
+        // }
 
         // dd($hasBeenLikeArticle);
 
@@ -102,7 +116,8 @@ class FrontendController extends Controller
             'comments' => $collectDataMapComments,
             'myComments' => $myComments,
             'authUser' => Auth::user(),
-            'hasBeenLikeArticle' => $hasBeenLikeArticle
+            // 'hasBeenLikeArticle' => $hasBeenLikeArticle,
+            'recomendationArticle' => Blog::with('author')->InRandomOrder()->limit(10)->get()
         ]);
     }
 

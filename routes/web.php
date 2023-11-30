@@ -23,6 +23,7 @@ use Inertia\Inertia;
 Route::get('/', [FrontendController::class, 'home'])->name('home');
 Route::get('/bloglist', [FrontendController::class, 'bloglist'])->name('bloglist');
 Route::get('/searcharticle', [FrontendController::class, 'bloglist'])->name('searcharticle');
+Route::get('/readarticle/{slug}', [FrontendController::class, 'readArticle'])->name('readArticle');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -32,7 +33,6 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('blogs.comments', CommentController::class);
 
-    Route::get('/readarticle/{slug}', [FrontendController::class, 'readArticle'])->name('readArticle');
 
     // Route for like or dislike article
     Route::post('like/{blog_id}/article', [LikeController::class, 'likeArticle'])->name('likeArticle');
@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('dislike/{blog_id}/comment/{comment_id}', [LikeController::class, 'dislikeComment'])->name('dislikeComment');
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
-        Route::resource('news', NewsController::class);
+
         Route::resource('blogs', BlogController::class);
 
         Route::middleware(['IsAdmin'])->group(function () {

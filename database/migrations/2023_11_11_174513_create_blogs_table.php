@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('image_url');
-            $table->string('title', 50);
+            $table->string('title');
             $table->string('slug');
             $table->string('status', 20)->default('review');
             $table->date('publish_date')->nullable();

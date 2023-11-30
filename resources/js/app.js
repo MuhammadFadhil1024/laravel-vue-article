@@ -6,9 +6,15 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import CKEditor from '@ckeditor/ckeditor5-vue';
-import moment from 'moment';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+// import { faUserSecret, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown, faComment, faXmarkCircle} from '@fortawesome/free-regular-svg-icons';
+import { faS } from '@fortawesome/free-solid-svg-icons';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+library.add(faThumbsUp, faThumbsDown, faS, faComment, faXmarkCircle);
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -18,6 +24,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(CKEditor)
+            .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el);
     },
     progress: {
